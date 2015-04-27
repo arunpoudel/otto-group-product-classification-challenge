@@ -24,27 +24,28 @@ param <- list("objective" = "multi:softprob",
               "eval_metric" = "mlogloss",
               "num_class" = 9,
               "nthread" = 16,
-              "bst:eta" = .3,
+              "bst:eta" = .4,
               "bst:max_depth" = 30,
               "lambda" = 1,
               "lambda_bias" = 0,
               "gamma" = 1,
               "alpha" = .8,
-              "min_child_weight" = 3,
+              "min_child_weight" = 2,
               "subsample" = .9,
               "colsample_bytree" = .9)
 
 # Run Cross Valication
-cv.nround = 91
+cv.nround = 45
+#cv.nround = 91
 bst.cv = xgb.cv(param=param, data = x[trind,], label = y,
-                nfold = 8, nrounds=cv.nround)
+                nfold = 11, nrounds=cv.nround)
 
 # Train the model
-nround = 91
+nround = 200
 bst = xgboost(param=param, data = x[trind,], label = y, nrounds=nround, verbose = 2)
 
 # Make prediction
-pred = predict(bst,x[teind,], verbose = TRUE)
+pred = predict(bst,x[teind,])
 pred = matrix(pred,9,length(pred)/9)
 pred = t(pred)
 
